@@ -1,10 +1,13 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
+import connectToDb from './db'
 
 const app = express();
 
 app.use(express.json())
 app.use(cors())
+
+connectToDb()
 
 const PORT = 1337
 
