@@ -7,7 +7,7 @@ const categorySchema = new mongoose.Schema(
             required: true,
         },
         isEditable: {
-            type: String,
+            type: Boolean,
             required: false,
             default: true,
         },
