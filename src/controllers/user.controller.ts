@@ -13,25 +13,56 @@ const getUserToken = (_id: string | Types.ObjectId) => {
 }
 
 export const createNewUser = async (request: Request, response: Response) => {
-try {
-    const { name, email, password } = request.body;
+    try {
+        const { name, email, password } = request.body;
     
-    const existingUser = await User.findOne({ email })
-    if (existingUser) {
-        return response.status(409).send("User Already exist")
+        const existingUser = await User.findOne({ email })
+        if (existingUser) {
+            return response.status(409).send("User Already exist")
+        }
+
+        const hashPassword = await bcrypt.hash(password, 12)
+
+        const user = await User.create({
+            name: name,
+            email: email,
+            password: hashPassword 
+        })
+
+        return response.status(200).send("Account created successful")
+    }   catch (error) {
+        console.log('Error creating new user', error)
+        throw error
     }
+}
 
-    const hashPassword = await bcrypt.hash(password, 12)
+export const login = async (request: Request, response: Response) => {
+    try {
+        const {email, password} : IUser = request.body
+        const existingUser = await User.findOne({ email })
+        if (!existingUser) {
+            return response.status(409).send("User does not exist")
+        }
 
-    const user = await User.create({
-        name: name,
-        email: email,
-        password: hashPassword 
-    })
+        const isPasswordIdentical = await bcrypt.compare(
+            password,
+            existingUser.password
+        )
 
-    return response.status(200).send("Account created successful")
-} catch (error) {
-    console.log('Error creating new user', error)
-    throw error
- }
+        if (isPasswordIdentical) {
+            const token = getUserToken(existingUser._id)
+            return response.send({
+                token,
+                user: {
+                    email: existingUser.email,
+                    name: existingUser.name
+                },
+            })
+        } else {
+            return response.status(409).send("Invalid login credentials")
+        }
+    } catch (error) {
+        console.log("Error in", error)
+        throw error
+    }
 }
