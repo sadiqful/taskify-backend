@@ -58,3 +58,21 @@ export const createCategory = async (request: AuthRequest, response: Response) =
       throw error
     }
   }  
+
+export const deleteCategory = async (request: AuthRequest, response: Response) => {
+    try {
+      const { id } = request.params
+      await Task.deleteMany({
+        categoryId: id,
+      })
+      const category = await Category.deleteOne({
+        _id: id,
+      })
+      response.send({ message: "Category deleted successfully" })
+    } catch (error) {
+      response.send({ error: "Error in deleting the category" })
+      throw error
+    }
+  }
+
+  
