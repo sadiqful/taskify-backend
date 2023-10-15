@@ -40,4 +40,21 @@ export const getCategoryById = async (request: AuthRequest, response: Response) 
     }
   }
 
+export const createCategory = async (request: AuthRequest, response: Response) => {
+    try {
+      const { color, icon, name }: ICategory = request.body
+      const { user } = request
   
+      const category = await Category.create({
+        color,
+        icon,
+        name,
+        user,
+      })
+      response.send(category)
+    } catch (error) {
+      console.log("error in createCategory", error)
+      response.send({ error: "Something went wrong" })
+      throw error
+    }
+  }  
