@@ -83,3 +83,24 @@ export const getTasksForToday = async (request: AuthRequest, response: Response)
       throw error
     }
   }
+
+  export const toggleTaskStatus = async (request: AuthRequest, response: Response) => {
+    try {
+      const { isCompleted } = request.body
+      const { id } = request.params
+  
+      const task = await Task.updateOne(
+        {
+          _id: id,
+        },
+        {
+          isCompleted,
+        }
+      )
+      response.send({ message: "Task status updated" })
+    } catch (error) {
+      console.log("error in toggleTaskStatus", error)
+      response.send({ error: "Error while toggling status task" })
+      throw error
+    }
+  }
