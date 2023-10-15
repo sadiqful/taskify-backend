@@ -104,3 +104,17 @@ export const getTasksForToday = async (request: AuthRequest, response: Response)
       throw error
     }
   }
+
+export const deleteTask = async (request: AuthRequest, response: Response) => {
+    try {
+      const { id } = request.params
+      await Task.deleteOne({
+        _id: id,
+      })
+      response.send({ message: "Task deleted" })
+    } catch (error) {
+      console.log("error in deleteTask", error)
+      response.send({ error: "Error while deleting task" })
+      throw error
+    }
+  }
