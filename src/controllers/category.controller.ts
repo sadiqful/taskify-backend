@@ -75,4 +75,26 @@ export const deleteCategory = async (request: AuthRequest, response: Response) =
     }
   }
 
-  
+export const updateCategory = async (request: AuthRequest, response: Response) => {
+    try {
+      const { _id, color, icon, isEditable, name }: ICategory = request.body
+      await Category.updateOne(
+        {
+          _id,
+        },
+        {
+          $set: {
+            name,
+            color,
+            icon,
+            isEditable,
+          },
+        }
+      )
+      response.send({ message: "Category updated successfully" })
+    } catch (error) {
+      console.log("error in updateCategory", error)
+      response.send({ error: "Error in updating the category" })
+      throw error
+    }
+  }  
