@@ -17,3 +17,18 @@ export const getAllTasks = async (request: AuthRequest, response: Response) => {
   }
 }
 
+export const getAllTasksByCategory = async (request: AuthRequest, response: Response) => {
+    try {
+      const userId = request.user
+      const { id } = request.params
+      const tasks = await Task.find({
+        user: userId,
+        categoryId: id,
+      })
+      response.send(tasks)
+    } catch (error) {
+      console.log("error in getAllTasksByCategory", error)
+      response.send({ error: "Error while fetching tasks" })
+      throw error
+    }
+  }
