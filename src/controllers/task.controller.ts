@@ -118,3 +118,26 @@ export const deleteTask = async (request: AuthRequest, response: Response) => {
       throw error
     }
   }
+
+export const editTask = async (request: AuthRequest, response: Response) => {
+    try {
+      const { _id, categoryId, date, name }: ITask = request.body
+      await Task.updateOne(
+        {
+          _id,
+        },
+        {
+          $set: {
+            name,
+            categoryId,
+            date,
+          },
+        }
+      )
+      response.send({ message: "Task updated successfully" })
+    } catch (error) {
+      console.log("error in editTask", error)
+      response.send({ error: " Error while updating the task" })
+      throw error
+    }
+  }
