@@ -64,3 +64,22 @@ export const getTasksForToday = async (request: AuthRequest, response: Response)
       throw error
     }
   }
+
+  export const createTask = async (request: AuthRequest, response: Response) => {
+    try {
+      const userId = request.user
+      const { name, date, categoryId }: ITask = request.body
+  
+      const task = await Task.create({
+        name,
+        date,
+        categoryId,
+        user: userId,
+      })
+      response.send(task)
+    } catch (error) {
+      console.log("error in createTask", error)
+      response.send({ error: "Error while creating task" })
+      throw error
+    }
+  }
